@@ -8,7 +8,9 @@ let userSchema = new Schema({
   password: {type: String},
   email: {type: String},
   name: {type: String},
-  bio: {type: String}
+  bio: {type: String},
+  listQuestion: [{type: Schema.Types.ObjectId, ref: 'Question'}],
+  listAnswer: [{type: Schema.Types.ObjectId, ref: 'Answer'}]
 }, {
   timestamps: true
 })

@@ -4,6 +4,7 @@ let db = require('../db')
 let Schema = mongoose.Schema
 
 let answerSchema = new Schema({
+  question: {type: Schema.Types.ObjectId, ref: 'Question'},
   answer: {type: String, required: true},
   score: {type: Number, default: 0},
   poster: {type: Schema.Types.ObjectId, ref: 'User'},

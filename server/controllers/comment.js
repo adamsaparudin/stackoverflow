@@ -1,10 +1,14 @@
 let Comment = require('../models/comment')
+let Answer = require('../models/answer')
 
 module.exports = {
 
   create: (req, res, next) => {
     let doc = new Comment(req.body)
     doc.save().then( (data) => {
+      Answer.findById(data.answer).then( (answer) => {
+        answer.listComment.push(data._id)
+      })
       res.send(data)
     }).catch( (err) =>{
       res.send(err)

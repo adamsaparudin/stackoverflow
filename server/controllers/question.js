@@ -1,10 +1,17 @@
 let Question = require('../models/question')
+let User = require('../models/user')
 
 module.exports = {
 
   create: (req, res, next) => {
     let doc = new Question(req.body)
     doc.save().then( (data) => {
+      User.findByIdAndUpdate(data.poster,
+      {$push: {"listQuestion": data._id}},
+      function(err, user) {
+        if(err) console.log(err);
+        else console.log(user);
+      })
       res.send(data)
     }).catch( (err) =>{
       res.send(err)

@@ -36,4 +36,13 @@ router.post('/answer', Answer.create)
 router.put('/answer/:id', Answer.update)
 router.delete('/answer/:id', Answer.deleteAnswer)
 
+// TODO: Afttter create comment, update field answer with list comment
+/* Comment */
+router.get('/comment', Comment.read)
+router.post('/comment', Comment.create)
+router.put('/comment/:id', Comment.update)
+router.delete('/comment/:id', Comment.deleteComment)
+
+
+
 module.exports = router;

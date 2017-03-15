@@ -4,9 +4,9 @@ let db = require('../db')
 let Schema = mongoose.Schema
 
 let commentSchema = new Schema({
+  answer: {type: Schema.Types.ObjectId, ref: 'Answer'},
   comment: {type: String, required: true},
-  poster: {type: Schema.Types.ObjectId, ref: 'User'},
-  listComment: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
+  poster: {type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 })

@@ -2,7 +2,7 @@
   <div class="Question">
     <Heading></Heading>
     <div class="row">
-      <LeftBar v-bind:teks="msg" @trigger1="getQuestions" v-bind:questionOne="questionOne"></LeftBar>
+      <LeftBar v-bind:teks="msg" v-bind:questionOne="questionOne"></LeftBar>
       <RightBar></RightBar>
     </div>
     <Foot></Foot>
@@ -49,17 +49,6 @@
             console.log(err);
           })
       },
-
-      getQuestions() {
-        axios.get('http://localhost:3000/api/questions')
-          .then( (res) => {
-            this.questions = res.data
-            console.log(res.data);
-          })
-          .catch( (err) => {
-            console.log(err);
-          })
-      }
     }
   };
 </script>

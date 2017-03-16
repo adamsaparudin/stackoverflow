@@ -10,6 +10,9 @@
       </div>
       <div class="col-md-10">
         <p>{{ questionOne.details }}</p>
+        <p>{{ questionOne.listAnswer.length }} Answers</p>
+        <hr>
+        
       </div>
     </div>
   </div>

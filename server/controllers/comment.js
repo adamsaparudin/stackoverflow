@@ -6,8 +6,11 @@ module.exports = {
   create: (req, res, next) => {
     let doc = new Comment(req.body)
     doc.save().then( (data) => {
-      Answer.findById(data.answer).then( (answer) => {
-        answer.listComment.push(data._id)
+      Answer.findByIdAndUpdate(data.answer,
+      {$push: {"listComment": data._id}},
+      function(err, answer) {
+        if(err) console.log(err);
+        else console.log(answer);
       })
       res.send(data)
     }).catch( (err) =>{

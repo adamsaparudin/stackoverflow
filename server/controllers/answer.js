@@ -7,18 +7,48 @@ module.exports = {
   create: (req, res, next) => {
     let doc = new Answer(req.body)
     doc.save().then( (data) => {
+
       User.findByIdAndUpdate(data.poster,
-      {$push: {"listQuestion": data._id}},
+      {$push: {"listAnswer": data._id}},
       function(err, user) {
         if(err) console.log(err);
         else console.log(user);
       })
-      Question.findByIdAndUpdate(data.question).then( (question) => {
-        question.listAnswer.push(data._id)
+
+      Question.findByIdAndUpdate(data.question,
+      {$push: {"listAnswer": data._id}},
+      function(err, question) {
+        if(err) console.log(err);
+        else console.log(question)
       })
+
       res.send(data)
     }).catch( (err) =>{
       res.send(err)
+    })
+  },
+
+  upvote: (req, res, next) => {
+    Answer.findById(req.params.id, (err, doc) => {
+      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
+        doc.score = doc.score + 1
+        doc.listGiveScore.push(req.params.user)
+        res.send("ok")
+      } else {
+        res.send("not ok")
+      }
+    })
+  },
+
+  downvote: (req, res, next) => {
+    Answer.findById(req.params.id, (err, doc) => {
+      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
+        doc.score = doc.score - 1
+        doc.listGiveScore.push(req.params.user)
+        res.send("ok")
+      } else {
+        res.send("not ok")
+      }
     })
   },
 

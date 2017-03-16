@@ -1,6 +1,6 @@
-# stackoverflow
+# client
 
-> A Vue.js project
+> Stackoverflow
 
 ## Build Setup
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 let db = require('../db')
 
 let Schema = mongoose.Schema
@@ -9,7 +10,7 @@ let questionSchema = new Schema({
     score: {type: Number, default: 0},
     poster: {type: Schema.Types.ObjectId, ref: 'User'},
     listGiveScore: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    listAnswer: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    listAnswer: [{type: Schema.Types.ObjectId, ref: 'Answer'}],
     viewCount: {type: Number, default: 0}
 }, {
   timestamps: true

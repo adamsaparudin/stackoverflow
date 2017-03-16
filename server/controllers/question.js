@@ -18,10 +18,54 @@ module.exports = {
     })
   },
 
-  read: (req, res, next) => {
-    Question.find({}).populate('poster').exec((err, docs) => {
+  readOne: (req, res, next) => {
+    Question.findOne({_id: req.params.id}).populate([{
+      path: 'poster',
+      model: 'User'
+    }, {
+      path: 'listAnswer',
+      model: 'Answer',
+      populate: {
+        path: 'listComment',
+        model: 'Comment'
+      }
+    }]).exec((err, docs) => {
         if(err) res.send(err)
         res.json(docs)
+    })
+  },
+
+  upvote: (req, res, next) => {
+    Question.findById(req.params.id, (err, doc) => {
+      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
+        doc.score = doc.score + 1
+        doc.listGiveScore.push(req.params.user)
+        res.send("ok")
+      } else {
+        res.send("not ok")
+      }
+    })
+  },
+
+  downvote: (req, res, next) => {
+    Question.findById(req.params.id, (err, doc) => {
+      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
+        doc.score = doc.score - 1
+        doc.listGiveScore.push(req.params.user)
+        res.send("ok")
+      } else {
+        res.send("not ok")
+      }
+    })
+  },
+
+  read: (req, res, next) => {
+    Question.find({}).populate({
+      path: 'poster',
+      model: 'User'
+    }).exec((err, docs) => {
+        if(err) res.send(err)
+        else res.json(docs)
     })
   },
 

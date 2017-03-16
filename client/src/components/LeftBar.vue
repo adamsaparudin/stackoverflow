@@ -16,8 +16,9 @@
         <span>1</span><br>
         Views
       </div>
+
       <div class="col-md-9">
-        <a href="#"><h3>{{ question.title }}</h3></a>
+        <a :href="'/questions/' + question._id"><h3>{{ question.title }}</h3></a>
         <p class="text-right">asked 4 sec ago <a href="#">{{ question.poster.username }}</a></p>
       </div>
     </div>

@@ -25,6 +25,7 @@ router.delete('/users/:id', User.deleteUser)
 // TODO: after create questions, update field user with list post question
 /* Question */
 router.get('/questions', Question.read)
+router.get('/questions/:id', Question.readOne)
 router.post('/questions', Question.create)
 router.put('/questions/:id', Question.update)
 router.delete('/questions/:id', Question.deleteQuestion)

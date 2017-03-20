@@ -16,6 +16,8 @@ router.get('/', function(req, res, next) {
 
 // Routing only for api
 
+router.post('/login', User.login)
+
 /* Users */
 router.get('/users', User.read)
 router.post('/users', User.create)
@@ -29,6 +31,9 @@ router.get('/questions/:id', Question.readOne)
 router.post('/questions', Question.create)
 router.put('/questions/:id', Question.update)
 router.delete('/questions/:id', Question.deleteQuestion)
+router.put('/questions/:id/:user/upvote', Question.upvote)
+router.put('/questions/:id/:user/downvote', Question.downvote)
+router.put('/questions/:id/:user/undovote', Question.undoVote)
 
 // TODO: after create answer, update field answer with list answer
 /* Answer */

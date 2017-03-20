@@ -8,7 +8,10 @@ let answerSchema = new Schema({
   answer: {type: String, required: true},
   score: {type: Number, default: 0},
   poster: {type: Schema.Types.ObjectId, ref: 'User'},
-  listGiveScore: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  listGiveScore: [{
+    user: {type: Schema.Types.ObjectId, ref: 'User'},
+    tipe: String
+  }],
   listComment: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
 }, {
   timestamps: true

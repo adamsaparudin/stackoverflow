@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-md-1">
         <a href="#">Upvote</a>
-        {{ questionOne.score }}
+        Score : {{ questionOne.score }}
         <a href="#">Downvote</a>
       </div>
       <div class="col-md-11">
@@ -21,7 +21,7 @@
       <div v-for="answerOne in questionOne.listAnswer">
       <div class="col-md-1">
         <a href="#">Upvote</a>
-        {{ answerOne.score }}
+        Score:{{ answerOne.score }}
         <a href="#">Downvote</a>
       </div>
       <div class="col-md-11">
@@ -40,8 +40,9 @@
     <h4>Your answer</h4>
     <div class="post-answer row">
       <div class="col-md-10" style="margin: 10px;">
-        <textarea class="form-control" rows="7" style="background-color: #fff"></textarea><br>
-        <button type="button" name="button">Go Go Go</button>
+        <textarea v-model="answer" class="form-control" rows="7" style="background-color: #fff"></textarea><br>
+
+        <button type="button" v-on:click="postAnswer" name="button">Go Go Go</button>
       </div>
     </div>
 
@@ -58,12 +59,25 @@
     data() {
       return {
         listQuestion: '',
+        answer: ''
       }
     },
     methods: {
-        trigger1() {
-          this.$emit('trigger1')
-        }
+      trigger1() {
+        this.$emit('trigger1')
+      },
+      postAnswer() {
+        axios.post('http://localhost:3000/api/answer', {
+          answer: this.answer,
+          question: this.$route.params.id,
+          poster: this.$parent.$parent.userMeta._id.toString()
+        }).then( (res) => {
+          console.log(res.data);
+          window.location.href = `/questions/${res.data.question}`
+        }).catch( (error) => {
+          console.log(error);
+        })
+      }
     }
   };
 </script>

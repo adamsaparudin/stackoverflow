@@ -19,17 +19,36 @@ module.exports = {
   },
 
   readOne: (req, res, next) => {
-    Question.findOne({_id: req.params.id}).populate([{
+    Question.findOne({_id: req.params.id}).populate([
+    {
       path: 'poster',
-      model: 'User'
-    }, {
+      model: 'User',
+      select: 'username'
+    },
+    {
       path: 'listAnswer',
       model: 'Answer',
-      populate: {
-        path: 'listComment',
-        model: 'Comment'
-      }
-    }]).exec((err, docs) => {
+      populate:
+      [
+        {
+          path: 'listComment',
+          model: 'Comment',
+          select: 'comment, poster',
+          populate:
+          {
+            path: 'poster',
+            model: 'User',
+            select: 'username',
+          }
+        },
+        {
+          path: 'poster',
+          populate: 'User',
+          select: 'username'
+        }
+      ]
+    }
+    ]).exec((err, docs) => {
         if(err) res.send(err)
         res.json(docs)
     })
@@ -37,25 +56,70 @@ module.exports = {
 
   upvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
-      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
-        doc.score = doc.score + 1
-        doc.listGiveScore.push(req.params.user)
-        res.send("ok")
-      } else {
-        res.send("not ok")
+      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+      if(index == -1) {
+        doc.update({
+          score: doc.score + 1,
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}}
+        }, (err, data) => {
+          if(err) res.send(err)
+          else res.send(data)
+        })
+      } else if (doc.listGiveScore[index].tipe == "downvote" && index != -1) {
+        let key = 'listGiveScore.' + index + '.tipe'
+        let obj = {}
+        obj[key] = 'upvote'
+        doc.update({
+          score: doc.score + 2,
+          $set: obj
+        }, (err, data) => {
+          if(err) res.send(err)
+          else res.send(data)
+        })
+      }
+      else {
+        res.send("you already upvote that shit")
       }
     })
   },
 
   downvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
-      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
-        doc.score = doc.score - 1
-        doc.listGiveScore.push(req.params.user)
-        res.send("ok")
-      } else {
-        res.send("not ok")
+      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+      if(index == -1) {
+        doc.update({
+          score: doc.score - 1,
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}}
+        }, (err, data) => {
+          if(err) res.send(err)
+          else res.send(data)
+        })
+      } else if (doc.listGiveScore[index].tipe == "upvote" && index != -1) {
+        let key = 'listGiveScore.' + index + '.tipe'
+        let obj = {}
+        obj[key] = 'downvote'
+        doc.update({
+          score: doc.score - 2,
+          $set: obj
+        }, (err, data) => {
+          if(err) res.send(err)
+          else res.send(data)
+        })
       }
+      else {
+        res.send("you already downvote that shit")
+      }
+    })
+  },
+
+  undoVote: (req, res, next) => {
+    Question.findById(req.params.id, (err, doc) => {
+      let newScore = doc.score - 1
+      doc.update({score: newScore, $pull: {listGiveScore : req.params.user}},
+      (err, data) => {
+        if(err) res.send(err)
+        else res.send(data)
+      })
     })
   },
 

@@ -1,6 +1,26 @@
 let User = require('../models/user')
+let jwt = require('jsonwebtoken')
 
 module.exports = {
+
+  login: (req, res, next) => {
+    User.findOne({
+      username: req.body.username,
+      password: req.body.password
+    })
+    .then( (data) => {
+      if (!data)
+        res.send("User not found")
+      else {
+        data.password = null
+        let token = jwt.sign(data, 'INISECRETTOKEN')
+        res.send(token)
+      }
+    })
+    .catch( (err) => {
+      res.send(err)
+    })
+  },
 
   create: (req, res, next) => {
     let doc = new User(req.body)

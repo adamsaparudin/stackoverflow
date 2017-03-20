@@ -5,8 +5,24 @@
 </template>
 
 <script>
+import jwt from 'jwt-decode'
+
 export default {
   name: 'app',
+  data() {
+    return {
+      userMeta: ''
+    }
+  },
+  methods: {
+    setUserMeta() {
+      if(localStorage.getItem("Token") != null)
+        this.userMeta = jwt(localStorage.getItem("Token"))._doc
+    }
+  },
+  mounted() {
+    this.setUserMeta()
+  }
 };
 </script>
 

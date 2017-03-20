@@ -16,15 +16,19 @@
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-      </ul>
+      <!-- Head Right -->
+      <RightHead></RightHead>
     </div>
   </div>
 </nav>
 </template>
 <script>
+import RightHead from './RightHead'
+
 export default {
+  components: {
+    RightHead
+  },
   name: 'heading',
   data() {
     return {

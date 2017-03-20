@@ -9,7 +9,10 @@ let questionSchema = new Schema({
     details: {type:String, required: true},
     score: {type: Number, default: 0},
     poster: {type: Schema.Types.ObjectId, ref: 'User'},
-    listGiveScore: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    listGiveScore: [{
+      user: String,
+      tipe: String
+    }],
     listAnswer: [{type: Schema.Types.ObjectId, ref: 'Answer'}],
     viewCount: {type: Number, default: 0}
 }, {

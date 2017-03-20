@@ -30,24 +30,62 @@ module.exports = {
 
   upvote: (req, res, next) => {
     Answer.findById(req.params.id, (err, doc) => {
-      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
-        doc.score = doc.score + 1
-        doc.listGiveScore.push(req.params.user)
-        res.send("ok")
-      } else {
-        res.send("not ok")
+      let score = doc.score
+      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+      if(index == -1) {
+        doc.update({
+          score: doc.score + 1,
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}},
+        },
+        {new: true, upsert: true},
+        (err, data) => {
+          if(err) res.send(err)
+          else res.send({_id: doc._id ,score : doc.score + 1})
+        })
+      } else if (doc.listGiveScore[index].tipe == "downvote" && index != -1) {
+        let key = 'listGiveScore.' + index + '.tipe'
+        let obj = {}
+        obj[key] = 'upvote'
+        doc.update({
+          score: doc.score + 2,
+          $set: obj,
+        }, {new: true, upsert: true}, (err, data) => {
+          if(err) res.send(err)
+          else res.send({_id: doc._id ,score : doc.score + 2})
+        })
+      }
+      else {
+        res.send("you already upvote that shit")
       }
     })
   },
 
   downvote: (req, res, next) => {
     Answer.findById(req.params.id, (err, doc) => {
-      if(doc.listGiveScore.indexOf(req.params.user) !== -1) {
-        doc.score = doc.score - 1
-        doc.listGiveScore.push(req.params.user)
-        res.send("ok")
-      } else {
-        res.send("not ok")
+      let score = doc.score
+      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+      if(index == -1) {
+        doc.update({
+          score: doc.score - 1,
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}},
+        }, {'new': true, upsert: true}, (err, data) => {
+          if(err) res.send(err)
+          else res.send({_id: doc._id ,score : doc.score - 1})
+        })
+      } else if (doc.listGiveScore[index].tipe == "upvote" && index != -1) {
+        let key = 'listGiveScore.' + index + '.tipe'
+        let obj = {}
+        obj[key] = 'downvote'
+        doc.update({
+          score: doc.score - 2,
+          $set: obj,
+        }, {'new': true, upsert: true}, (err, data) => {
+          if(err) res.send(err)
+          else res.send({_id: doc._id ,score : doc.score - 2})
+        })
+      }
+      else {
+        res.send("you already downvote that shit")
       }
     })
   },

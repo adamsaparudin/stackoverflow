@@ -41,6 +41,8 @@ router.get('/answer', Answer.read)
 router.post('/answer', Answer.create)
 router.put('/answer/:id', Answer.update)
 router.delete('/answer/:id', Answer.deleteAnswer)
+router.put('/answer/:id/:user/upvote', Answer.upvote)
+router.put('/answer/:id/:user/downvote', Answer.downvote)
 
 // TODO: Afttter create comment, update field answer with list comment
 /* Comment */

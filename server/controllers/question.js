@@ -56,14 +56,17 @@ module.exports = {
 
   upvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
+      let score = doc.score
       let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
       if(index == -1) {
         doc.update({
           score: doc.score + 1,
-          $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}}
-        }, (err, data) => {
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}},
+        },
+        {new: true, upsert: true},
+        (err, data) => {
           if(err) res.send(err)
-          else res.send(data)
+          else res.send({score : doc.score + 1})
         })
       } else if (doc.listGiveScore[index].tipe == "downvote" && index != -1) {
         let key = 'listGiveScore.' + index + '.tipe'
@@ -71,10 +74,10 @@ module.exports = {
         obj[key] = 'upvote'
         doc.update({
           score: doc.score + 2,
-          $set: obj
-        }, (err, data) => {
+          $set: obj,
+        }, {new: true, upsert: true}, (err, data) => {
           if(err) res.send(err)
-          else res.send(data)
+          else res.send({score : doc.score + 2})
         })
       }
       else {
@@ -85,14 +88,15 @@ module.exports = {
 
   downvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
+      let score = doc.score
       let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
       if(index == -1) {
         doc.update({
           score: doc.score - 1,
-          $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}}
-        }, (err, data) => {
+          $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}},
+        }, {'new': true, upsert: true}, (err, data) => {
           if(err) res.send(err)
-          else res.send(data)
+          else res.send({score : doc.score - 1})
         })
       } else if (doc.listGiveScore[index].tipe == "upvote" && index != -1) {
         let key = 'listGiveScore.' + index + '.tipe'
@@ -100,10 +104,10 @@ module.exports = {
         obj[key] = 'downvote'
         doc.update({
           score: doc.score - 2,
-          $set: obj
-        }, (err, data) => {
+          $set: obj,
+        }, {'new': true, upsert: true}, (err, data) => {
           if(err) res.send(err)
-          else res.send(data)
+          else res.send({score : doc.score - 2})
         })
       }
       else {

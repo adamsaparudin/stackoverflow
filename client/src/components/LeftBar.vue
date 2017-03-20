@@ -5,11 +5,11 @@
     <h3>Latest Questions</h3>
     <div class="row" v-for="question in questions">
       <div class="col-md-1">
-        <span>0</span><br>
+        <span>{{ question.score }}</span><br>
         Votes
       </div>
       <div class="col-md-1">
-        <span>0</span><br>
+        <span>{{ question.listAnswer.length }}</span><br>
         Answers
       </div>
       <div class="col-md-1">

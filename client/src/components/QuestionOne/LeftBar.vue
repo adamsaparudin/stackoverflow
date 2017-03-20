@@ -8,23 +8,24 @@
 
     <div class="row">
       <div class="col-md-1">
-        <a href="#">Upvote</a>
+        <button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button>
         Score : {{ questionOne.score }}
-        <a href="#">Downvote</a>
+        <button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button>
       </div>
       <div class="col-md-11">
         <p>{{ questionOne.details }}</p>
+        <br>
         <p>{{ questionOne.listAnswer.length }} Answers</p>
         <hr>
       </div>
 
       <div v-for="answerOne in questionOne.listAnswer">
-      <div class="col-md-1">
-        <a href="#">Upvote</a>
-        Score:{{ answerOne.score }}
-        <a href="#">Downvote</a>
+      <div class="col-md-2">
+        <button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button>
+        Score : {{ answerOne.score }}
+        <button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button>
       </div>
-      <div class="col-md-11">
+      <div class="col-md-10">
         <div class="answer">
           <p>{{ answerOne.answer }}</p>
           <hr>
@@ -50,7 +51,6 @@
 </template>
 
 <script>
-
   import axios from 'axios';
 
   export default {
@@ -66,11 +66,41 @@
       trigger1() {
         this.$emit('trigger1')
       },
+      voteQuestion(url) {
+        axios.put(url, {})
+        .then( (res) => {
+          if(res.data.score)
+            this.questionOne.score = res.data.score
+          else {
+            console.log("Stupid Nigga");
+          }
+        })
+        .catch( (error) => {
+          console.log(error);
+        })
+      },
+      voteAnswer(url) {
+        axios.put(url, {})
+        .then( (res) => {
+          if(res.data.score) {
+            let ansInd = this.questionOne.listAnswer.findIndex(x => x._id == res.data._id)
+            let index = this.questionOne.listAnswer[ansInd].listGiveScore.findIndex(x => x.user == this.$parent.$parent.userMeta._id)
+            console.log(index);
+            this.questionOne.listAnswer[ansInd].score = res.data.score
+          }
+          else {
+            console.log("Stupid Nigga");
+          }
+        })
+        .catch( (error) => {
+          console.log(error);
+        })
+      },
       postAnswer() {
         axios.post('http://localhost:3000/api/answer', {
           answer: this.answer,
           question: this.$route.params.id,
-          poster: this.$parent.$parent.userMeta._id.toString()
+          poster: this.$parent.$parent.userMeta._id
         }).then( (res) => {
           console.log(res.data);
           window.location.href = `/questions/${res.data.question}`

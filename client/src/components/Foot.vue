@@ -1,5 +1,5 @@
 <template>
-  <div class="row" style="background-color: #242729; padding: 15px;">
+  <div class="foot" style="background-color: #242729; padding: 15px;">
     <h1>Ini Footer</h1>
   </div>
 </template>
@@ -16,6 +16,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.foot {
+  margin-top: 100px;
+}
+
 h1, h2 {
   font-weight: normal;
 }

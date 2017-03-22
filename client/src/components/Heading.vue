@@ -1,26 +1,30 @@
 <template>
-  <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/">StackOverflow</a>
-    </div>
+  <div class="full-width">
+          <header>
+              <div class="left">
+                  <div class="logo"><img src="../assets/so-logo.png" width="160px"></div>
+                  <div class="menu">
+                  <nav>
+                      <ul>
+                          <li><router-link to="/questions">Questions</router-link></li>
+                          <li><input type="text" placeholder="Search..."></li>
+                      </ul>
+                  </nav>
+                  </div>
+              </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Questions <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Users</a></li>
-      </ul>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <!-- Head Right -->
-      <RightHead></RightHead>
-    </div>
-  </div>
-</nav>
+              <div class="right" v-if="$parent.$parent.userMeta._id == null">
+                  <router-link to="/login">Login</router-link>
+                  <a href="#" class="button-signup">Sign Up</a>
+              </div>
+              <div class="right" v-else>
+                <a href="#">{{ $parent.$parent.userMeta.username }}</a>
+                <button v-on:click="logoutUser">Logout</button>
+              </div>
+
+
+          </header>
+      </div>
 </template>
 <script>
 import RightHead from './RightHead'
@@ -35,6 +39,12 @@ export default {
       msg: 'Welcome to Your Vue.js App',
     };
   },
+  methods: {
+    logoutUser() {
+      localStorage.clear();
+      window.location.href = "/"
+    }
+  }
 };
 </script>
 

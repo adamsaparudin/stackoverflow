@@ -1,6 +1,6 @@
 <template>
-  <div class="col-md-3" id="right">
-    <h2>Another Blood</h2>
+  <div class="sidebar">
+
   </div>
 </template>
 

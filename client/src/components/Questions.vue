@@ -1,10 +1,9 @@
 <template>
   <div class="Question">
     <Heading></Heading>
-    <div class="row">
       <LeftBar v-bind:teks="msg" @trigger1="getQuestions" v-bind:questions="questions"></LeftBar>
       <RightBar></RightBar>
-    </div>
+    <div class="clear"></div>
     <Foot></Foot>
   </div>
 </template>

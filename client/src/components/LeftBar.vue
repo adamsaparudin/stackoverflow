@@ -2,25 +2,33 @@
   <div class="col-md-9" id="left">
     <!-- <h1>{{ teks }}</h1>
     <button type="button" name="button" v-on:click="trigger1">Go</button> -->
-    <h3>Latest Questions</h3>
-    <div class="row" v-for="question in questions">
-      <div class="col-md-1">
-        <span>{{ question.score }}</span><br>
-        Votes
-      </div>
-      <div class="col-md-1">
-        <span>{{ question.listAnswer.length }}</span><br>
-        Answers
-      </div>
-      <div class="col-md-1">
-        <span>1</span><br>
-        Views
-      </div>
 
-      <div class="col-md-9">
-        <a :href="'/questions/' + question._id"><h3>{{ question.title }}</h3></a>
-        <p class="text-right">asked 4 sec ago <a href="#">{{ question.poster.username }}</a></p>
-      </div>
+    <div class="container">
+        <div class="mainbar">
+            <h1>Top Questions</h1>
+            <div class="question-one" v-for="question in questions">
+                <div class="votes">
+                    <ul>
+                        <li>
+                            <span>{{ question.score }}</span>
+                            <div>votes</div>
+                        </li>
+                        <li>
+                            <span>{{ question.listAnswer.length }}</span>
+                            <div>answers</div>
+                        </li>
+                        <li>
+                            <span>2</span>
+                            <div>views</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="meta-question">
+                    <router-link :to="'/questions/' + question._id"><h2>{{ question.title }}</h2></router-link>
+                    <div class="meta-user"><span>asked 36 secs ago</span> <a href="#">{{ question.poster.username }}</a></div>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 </template>
@@ -46,6 +54,11 @@
 </script>
 
 <style>
+.meta-question h2 {
+  font-weight: 400;
+  font-size: 18px;
+  color: #2598f7;
+}
   #left {
     background-color: lightgreen;
   }

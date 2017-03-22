@@ -1,43 +1,52 @@
 <template>
-  <div class="col-md-9" id="left">
+  <div class="container">
     <!-- <h1>{{ teks }}</h1>
     <button type="button" name="button" v-on:click="trigger1">Go</button> -->
-    <h3>{{ questionOne.title }}</h3>
-    <hr></hr>
-
-
-    <div class="row">
-      <div class="col-md-1">
-        <button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button>
-        Score : {{ questionOne.score }}
-        <button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button>
-      </div>
-      <div class="col-md-11">
-        <p>{{ questionOne.details }}</p>
-        <br>
-        <p>{{ questionOne.listAnswer.length }} Answers</p>
-        <hr>
-      </div>
-
-      <div v-for="answerOne in questionOne.listAnswer">
-      <div class="col-md-2">
-        <button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button>
-        Score : {{ answerOne.score }}
-        <button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button>
-      </div>
-      <div class="col-md-10">
-        <div class="answer">
-          <p>{{ answerOne.answer }}</p>
+          <h3>{{ questionOne.title }}</h3>
           <hr>
-          <div class="col-md-12 comment" v-for="comment in answerOne.listComment">
-            <p>{{ comment.comment }}</p>
-            <hr>
-          </div>
-        </div>
-      </div>
-      </div>
+            <div class="mainbar">
+                <div class="set-vote">
+                    <ul>
+                        <li><button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button></li>
+                        <li>{{ questionOne.score }}</li>
+                        <li><button v-on:click="voteQuestion(`http://localhost:3000/api/questions/${questionOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button></li>
+                    </ul>
+                </div>
+                <div class="question-content">
+                    <p>{{ questionOne.details }}</p>
+                </div>
+                <div class="clear"></div>
+                <div class="meta-user">
+                    <p>{{ questionOne.createdAt }}</p>
+                    <img src="http://lorempixel.com/30/30/">
+                    <span><a href="#">{{ questionOne.poster.username }}</a></span>
+                </div>
+                <div class="clear"></div>
+                <h3>{{ questionOne.listAnswer.length }} Answers</h3>
+                <hr>
+            </div>
 
-    </div>
+            <div class="mainbar" v-for="answerOne in questionOne.listAnswer">
+                <div class="set-vote">
+                    <ul>
+                        <li><button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/upvote`)">Upvote</button></li>
+                        <li>{{ answerOne.score }}</li>
+                        <li><button v-on:click="voteAnswer(`http://localhost:3000/api/answer/${answerOne._id}/${$parent.$parent.userMeta._id}/downvote`)">Downvote</button></li>
+                    </ul>
+                </div>
+                <div class="question-content">
+                    <p>{{ answerOne.answer }}</p>
+                </div>
+                <div class="clear"></div>
+                <div class="meta-user">
+                    <p>{{ answerOne.createdAt }}</p>
+                    <img src="http://lorempixel.com/30/30/">
+                    <span><a href="#">{{ answerOne.poster.username }}</a></span>
+                </div>
+                <div class="clear"></div>
+                <hr>
+            </div>
+            <div class="clear"></div>
     <h4>Your answer</h4>
     <div class="post-answer row">
       <div class="col-md-10" style="margin: 10px;">
@@ -69,6 +78,10 @@
       voteQuestion(url) {
         axios.put(url, {})
         .then( (res) => {
+          if(this.$parent.$parent.userMeta._id == undefined) {
+            alert("please login first")
+            return 0
+          }
           if(res.data.score)
             this.questionOne.score = res.data.score
           else {
@@ -82,6 +95,10 @@
       voteAnswer(url) {
         axios.put(url, {})
         .then( (res) => {
+          if(this.$parent.$parent.userMeta._id == undefined) {
+            alert("please login first")
+            return 0
+          }
           if(res.data.score) {
             let ansInd = this.questionOne.listAnswer.findIndex(x => x._id == res.data._id)
             let index = this.questionOne.listAnswer[ansInd].listGiveScore.findIndex(x => x.user == this.$parent.$parent.userMeta._id)
@@ -97,6 +114,10 @@
         })
       },
       postAnswer() {
+        if(this.$parent.$parent.userMeta._id == undefined) {
+          alert("please login first")
+          return 0
+        }
         axios.post('http://localhost:3000/api/answer', {
           answer: this.answer,
           question: this.$route.params.id,
@@ -114,15 +135,31 @@
 
 <style>
 
+  .meta-user img {
+    float: right;
+  }
+
+  .meta-user p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .meta-user span a {
+    font-size: 14px;
+  }
+
+  .mainbar h3 {
+    font-weight: 400;
+    font-size: 16px;
+  }
+
   .comment {
     padding: 0px 0px 0px 10px;
   }
 
   .comment p {
     font-size: 14px;
-  }
-  #left {
-    background-color: lightgreen;
   }
   span {
     font-size: 20px;

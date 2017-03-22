@@ -1,23 +1,24 @@
 <template lang="html">
   <div class="Login">
     <Heading></Heading>
-    <div class="row">
 
-      <div class="col-md-2 col-md-offset-5">
+      <div class="form-login">
         <form>
           <div class="form-group">
-            <label for="username">Username : </label>
-            <input type="text" name="username" v-model="username">
+            <label for="username">Username :
+              <input type="text" name="username" v-model="username">
+            </label>
 
-            <label for="password">Password : </label>
-            <input type="text" name="password" v-model="password">
-
+            <br>
+            <label for="password">Password :
+              <input type="password" name="password" v-model="password">
+            </label>
+            <br>
             <button type="button" v-on:click="LoginCoy" name="button"> Login </button>
           </div>
         </form>
       </div>
-
-    </div>
+    <div class="clear"></div>
     <Foot></Foot>
   </div>
 </template>
@@ -61,4 +62,17 @@ export default {
 </script>
 
 <style lang="css">
+
+.form-login {
+  margin: 30px auto;
+  width: 300px;
+  height: 300px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+label {
+  margin-top: 20px;
+}
+
 </style>

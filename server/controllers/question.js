@@ -57,61 +57,68 @@ module.exports = {
   upvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
       let score = doc.score
-      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
-      if(index == -1) {
-        doc.update({
-          score: doc.score + 1,
-          $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}},
-        },
-        {new: true, upsert: true},
-        (err, data) => {
-          if(err) res.send(err)
-          else res.send({score : doc.score + 1})
-        })
-      } else if (doc.listGiveScore[index].tipe == "downvote" && index != -1) {
-        let key = 'listGiveScore.' + index + '.tipe'
-        let obj = {}
-        obj[key] = 'upvote'
-        doc.update({
-          score: doc.score + 2,
-          $set: obj,
-        }, {new: true, upsert: true}, (err, data) => {
-          if(err) res.send(err)
-          else res.send({score : doc.score + 2})
-        })
+      if(req.params.id == undefined || req.params.id == null) {
+        let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+        if(index == -1) {
+          doc.update({
+            score: doc.score + 1,
+            $push: {"listGiveScore": {user: req.params.user, tipe: 'upvote'}},
+          },
+          {new: true, upsert: true},
+          (err, data) => {
+            if(err) res.send(err)
+            else res.send({score : doc.score + 1})
+          })
+        } else if (doc.listGiveScore[index].tipe == "downvote" && index != -1) {
+          let key = 'listGiveScore.' + index + '.tipe'
+          let obj = {}
+          obj[key] = 'upvote'
+          doc.update({
+            score: doc.score + 2,
+            $set: obj,
+          }, {new: true, upsert: true}, (err, data) => {
+            if(err) res.send(err)
+            else res.send({score : doc.score + 2})
+          })
+        }
+        else {
+          res.send("you already upvote that shit")
+        }
       }
-      else {
-        res.send("you already upvote that shit")
-      }
+      else res.send("Stupid nigga")
     })
   },
 
   downvote: (req, res, next) => {
     Question.findById(req.params.id, (err, doc) => {
       let score = doc.score
-      let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
-      if(index == -1) {
-        doc.update({
-          score: doc.score - 1,
-          $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}},
-        }, {'new': true, upsert: true}, (err, data) => {
-          if(err) res.send(err)
-          else res.send({score : doc.score - 1})
-        })
-      } else if (doc.listGiveScore[index].tipe == "upvote" && index != -1) {
-        let key = 'listGiveScore.' + index + '.tipe'
-        let obj = {}
-        obj[key] = 'downvote'
-        doc.update({
-          score: doc.score - 2,
-          $set: obj,
-        }, {'new': true, upsert: true}, (err, data) => {
-          if(err) res.send(err)
-          else res.send({score : doc.score - 2})
-        })
-      }
-      else {
-        res.send("you already downvote that shit")
+      if(req.params.id == undefined || req.params.id == null) {
+        let index = doc.listGiveScore.findIndex( x => x.user == req.params.user);
+        if(index == -1) {
+          doc.update({
+            score: doc.score - 1,
+            $push: {"listGiveScore": {user: req.params.user, tipe: 'downvote'}},
+          }, {'new': true, upsert: true}, (err, data) => {
+            if(err) res.send(err)
+            else res.send({score : doc.score - 1})
+          })
+        } else if (doc.listGiveScore[index].tipe == "upvote" && index != -1) {
+          let key = 'listGiveScore.' + index + '.tipe'
+          let obj = {}
+          obj[key] = 'downvote'
+          doc.update({
+            score: doc.score - 2,
+            $set: obj,
+          }, {'new': true, upsert: true}, (err, data) => {
+            if(err) res.send(err)
+            else res.send({score : doc.score - 2})
+          })
+        }
+        else {
+          res.send("you already downvote that shit")
+        }
+      } else {
+        res.send("Supid nigga")
       }
     })
   },
